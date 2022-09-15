@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="top_bar_icon_padding">80.dp</dimen>
+    <dimen name="top_bar_icon_size">32.dp</dimen>
+    <dimen name="search_icon_padding">15.dp</dimen>
+    <dimen name="search_icon_size">24.dp</dimen>
+    <dimen name="search_bar_border_radius">10.dp</dimen>
+    <dimen name="search_bar_padding">15.dp</dimen>
+</resources>

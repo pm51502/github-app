@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">GitHubApp</string>
+    <string name="main">Main</string>
+    <string name="details">Details</string>
+    <string name="arrow_back">Arrow back</string>
+    <string name="home">Home</string>
+    <string name="github_icon">Github icon</string>
+    <string name="search_icon">Search icon</string>
+    <string name="search">Search</string>
+    <string name="search_clear_icon">Search clear icon</string>
 </resources>
