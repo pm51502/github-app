@@ -56,7 +56,10 @@ fun SearchBar(
             disabledIndicatorColor = Transparent
         ),
         placeholder = {
-            Text(text = stringResource(id = R.string.search))
+            Text(
+                text = stringResource(id = R.string.search),
+                color = GithubGray
+            )
         },
         trailingIcon = {
             if (showClearIcon) {

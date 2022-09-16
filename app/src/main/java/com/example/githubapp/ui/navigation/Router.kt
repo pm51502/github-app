@@ -33,12 +33,16 @@ fun AppNavHost(
         }
 
         composable(
-            route = "${AppScreen.Details.route}/{repoId}",
-            arguments = listOf(navArgument("repoId") { type = NavType.IntType })
+            route = "${AppScreen.Details.route}/{repoOwner}/{repoName}",
+            arguments = listOf(
+                navArgument("repoOwner") { type = NavType.StringType },
+                navArgument("repoName") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
             DetailsScreen(
                 navController = navController,
-                repositoryId = backStackEntry.arguments?.getInt("repoId")
+                repoOwner = backStackEntry.arguments?.getString("repoOwner"),
+                repoName = backStackEntry.arguments?.getString("repoName")
             )
         }
     }
