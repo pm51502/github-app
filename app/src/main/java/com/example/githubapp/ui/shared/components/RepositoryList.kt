@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.githubapp.R
-import com.example.githubapp.ui.screens.Repository
+import com.example.githubapp.network.Repository
 
 @Composable
 fun RepositoryList(

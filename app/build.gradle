@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.0'
 }
 
 android {
@@ -62,4 +63,34 @@ dependencies {
     def nav_version = "2.4.1"
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+
+    def koin_version= "3.2.0-beta-1"
+    // Koin main features for Android
+    implementation "io.insert-koin:koin-android:$koin_version"
+    // No more koin-android-viewmodel, koin-android-scope, koin-android-fragment
+    // Java Compatibility
+    implementation "io.insert-koin:koin-android-compat:$koin_version"
+    // Jetpack WorkManager
+    implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
+    // Navigation Graph
+    implementation "io.insert-koin:koin-androidx-navigation:$koin_version"
+    // Jetpack Compose
+    implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+    // Koin for Ktor
+    implementation "io.insert-koin:koin-ktor:$koin_version"
+    // SLF4J Logger
+    implementation "io.insert-koin:koin-logger-slf4j:$koin_version"
+
+    def ktor_version = "1.6.4"
+    implementation "io.ktor:ktor-client-core:$ktor_version"
+    implementation "io.ktor:ktor-client-android:$ktor_version"
+    implementation "io.ktor:ktor-client-serialization:$ktor_version"
+    implementation "io.ktor:ktor-client-logging:$ktor_version"
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+
+    implementation("io.coil-kt:coil-compose:2.0.0")
 }

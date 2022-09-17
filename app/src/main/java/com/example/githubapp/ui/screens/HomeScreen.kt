@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -17,12 +16,17 @@ import com.example.githubapp.R
 import com.example.githubapp.ui.navigation.AppScreen
 import com.example.githubapp.ui.navigation.navigateToScreen
 import com.example.githubapp.ui.shared.components.*
+import com.example.githubapp.viewmodels.HomeViewModel
+import org.koin.androidx.compose.viewModel
 import java.time.ZonedDateTime
 
 @Composable
 fun HomeScreen(
     navController: NavController
 ) {
+    val homeViewModel by viewModel<HomeViewModel>()
+    val repositoryList = homeViewModel.searchedReposStateFlow.collectAsState().value
+
     var showSearchBar by remember { mutableStateOf(true) }
     var showFilterPicker by remember { mutableStateOf(true) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
@@ -42,7 +46,10 @@ fun HomeScreen(
         if (showSearchBar) {
             SearchBar(
                 searchQuery = searchQuery,
-                onQueryChange = { searchQuery = it }
+                onQueryChange = { searchQuery = it },
+                onSearchDone = {
+                    homeViewModel.searchRepositories(searchQuery = searchQuery)
+                }
             )
         }
 
@@ -77,114 +84,5 @@ fun HomeScreen(
                 uriHandler.openUri(htmlUrl)
             }
         )
-
-        selectedSortField?.let { Text(it.toString()) }
-        Text(text = searchQuery)
     }
 }
-
-data class Repository(
-    val id: Int,
-    val name: String,
-    val owner: RepositoryOwner,
-    val watchersCount: Int,
-    val forksCount: Int,
-    val issuesCount: Int,
-    val starsCount: Int, //stargazers_count
-    val updatedAt: String,
-)
-
-data class RepositoryOwner(
-    val name: String,
-    //val avatarUrl: String,
-    val avatarId: Int,
-    val htmlUrl: String,
-)
-
-//val repositoryList = List(20) {
-//    Repository(
-//        id = 1,
-//        name = "android-vjestina-tmdb",
-//        owner = RepositoryOwner(
-//            name = "pm51502",
-//            avatarId = R.drawable.ic_github,
-//            htmlUrl = "https://github.com/pm51502"
-//        ),
-//        watchersCount = 5,
-//        forksCount = 5,
-//        issuesCount = 0
-//    )
-//}
-
-val repositoryList = listOf(
-    Repository(
-        id = 1,
-        name = "android-vjestina-tmdb",
-        owner = RepositoryOwner(
-            name = "pm51502",
-            avatarId = R.drawable.ic_github,
-            htmlUrl = "https://github.com/pm51502"
-        ),
-        watchersCount = 1,
-        forksCount = 2,
-        issuesCount = 3,
-        starsCount = 7,
-        updatedAt = "2011-09-15T09:53:18Z"
-    ),
-    Repository(
-        id = 1,
-        name = "android-vjestina-tmdb",
-        owner = RepositoryOwner(
-            name = "pm51502",
-            avatarId = R.drawable.ic_github,
-            htmlUrl = "https://github.com/pm51502"
-        ),
-        watchersCount = 3,
-        forksCount = 2,
-        issuesCount = 6,
-        starsCount = 2,
-        updatedAt = "2021-09-15T09:53:18Z"
-    ),
-    Repository(
-        id = 1,
-        name = "android-vjestina-tmdb",
-        owner = RepositoryOwner(
-            name = "pm51502",
-            avatarId = R.drawable.ic_github,
-            htmlUrl = "https://github.com/pm51502"
-        ),
-        watchersCount = 16,
-        forksCount = 8,
-        issuesCount = 99,
-        starsCount = 1,
-        updatedAt = "2000-09-15T09:53:18Z"
-    ),
-    Repository(
-        id = 1,
-        name = "android-vjestina-tmdb",
-        owner = RepositoryOwner(
-            name = "pm51502",
-            avatarId = R.drawable.ic_github,
-            htmlUrl = "https://github.com/pm51502"
-        ),
-        watchersCount = 555,
-        forksCount = 59,
-        issuesCount = 0,
-        starsCount = 0,
-        updatedAt = "2019-09-15T09:53:18Z"
-    ),
-    Repository(
-        id = 1,
-        name = "android-vjestina-tmdb",
-        owner = RepositoryOwner(
-            name = "pm51502",
-            avatarId = R.drawable.ic_github,
-            htmlUrl = "https://github.com/pm51502"
-        ),
-        watchersCount = 7,
-        forksCount = 2,
-        issuesCount = 1,
-        starsCount = 99,
-        updatedAt = "2018-09-15T09:53:18Z"
-    )
-)

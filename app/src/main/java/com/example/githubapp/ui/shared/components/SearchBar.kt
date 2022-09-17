@@ -26,6 +26,7 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     searchQuery: String,
     onQueryChange: (String) -> Unit,
+    onSearchDone: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
     var showClearIcon by remember { mutableStateOf(searchQuery.isNotEmpty()) }
@@ -73,6 +74,9 @@ fun SearchBar(
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+        keyboardActions = KeyboardActions(onDone = {
+            onSearchDone.invoke()
+            focusManager.clearFocus()
+        })
     )
 }

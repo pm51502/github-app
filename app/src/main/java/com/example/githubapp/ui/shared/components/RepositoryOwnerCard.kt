@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.githubapp.R
-import com.example.githubapp.ui.screens.RepositoryOwner
+import com.example.githubapp.network.RepositoryOwner
 
 @Composable
 fun RepositoryOwnerCard(
@@ -34,11 +34,14 @@ fun RepositoryOwnerCard(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.repository_owner_card_vertical_spacing)),
             modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.repository_owner_card_vertical_padding))
         ) {
-            Image(
-                painter = painterResource(id = repositoryOwner.avatarId),
-                contentDescription = stringResource(id = R.string.repository_owner_avatar),
-                modifier = Modifier.size(85.dp)
-            )
+            if (repositoryOwner.avatarUrl != null && repositoryOwner.avatarUrl.isNotEmpty()) {
+                Image(
+                    painter = rememberAsyncImagePainter(model = repositoryOwner.avatarUrl),
+                    //painterResource(id = repositoryOwner.avatarId),
+                    contentDescription = stringResource(id = R.string.repository_owner_avatar),
+                    modifier = Modifier.size(85.dp)
+                )
+            }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically

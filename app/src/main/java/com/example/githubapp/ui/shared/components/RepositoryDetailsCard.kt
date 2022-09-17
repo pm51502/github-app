@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.example.githubapp.R
-import com.example.githubapp.ui.screens.RepositoryDetails
+import com.example.githubapp.network.RepositoryDetails
 import com.example.githubapp.utils.formatTime
 
 @Composable
@@ -58,11 +58,13 @@ fun RepositoryDetailsCard(
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.h1
             )
-            Text(
-                text = repositoryDetails.description,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.repository_details_card_desc_padding))
-            )
+            if (repositoryDetails.description != null) {
+                Text(
+                    text = repositoryDetails.description,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.repository_details_card_desc_padding))
+                )
+            }
 
             RepositoryStatsRow(stats = repositoryStats)
 
