@@ -14,9 +14,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.githubapp.R
 import com.example.githubapp.data.RepoData
-import com.example.githubapp.ui.shared.components.RepositoryDetailsCard
-import com.example.githubapp.ui.shared.components.RepositoryOwnerCard
-import com.example.githubapp.ui.shared.components.ScreenSectionTitle
+import com.example.githubapp.network.Resource
+import com.example.githubapp.ui.shared.components.*
+import com.example.githubapp.utils.toRepositoryDetails
 import com.example.githubapp.viewmodels.DetailsViewModel
 import org.koin.androidx.compose.viewModel
 import org.koin.core.parameter.parametersOf
@@ -40,7 +40,7 @@ fun DetailsScreen(
             repoName = repoName
         )
     )
-    val repositoryDetails = detailsViewModel.repoDetailsStateFlow.collectAsState().value
+    val repositoryDetailsResource = detailsViewModel.repoDetailsStateFlow.collectAsState().value
 
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
@@ -62,31 +62,48 @@ fun DetailsScreen(
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small_spacing)))
 
-        RepositoryOwnerCard(
-            repositoryOwner = repositoryDetails.owner,
-            onOpenInBrowserClick = openInBrowserClick
-        )
+        when (repositoryDetailsResource) {
+            is Resource.Success -> {
+                val repositoryDetails = repositoryDetailsResource.data?.toRepositoryDetails()
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.medium_spacing)))
+                if (repositoryDetails != null) {
+                    RepositoryOwnerCard(
+                        repositoryOwner = repositoryDetails.owner,
+                        onOpenInBrowserClick = openInBrowserClick
+                    )
 
-        ScreenSectionTitle(
-            title = stringResource(id = R.string.repository_details),
-            modifier = Modifier.fillMaxWidth()
-        )
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.medium_spacing)))
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small_spacing)))
+                    ScreenSectionTitle(
+                        title = stringResource(id = R.string.repository_details),
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-        RepositoryDetailsCard(
-            repositoryDetails = repositoryDetails,
-            onOpenInBrowserClick = openInBrowserClick,
-            onShareClick = { htmlUri ->
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, htmlUri)
-                    type = "text/plain"
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small_spacing)))
+
+                    RepositoryDetailsCard(
+                        repositoryDetails = repositoryDetails,
+                        onOpenInBrowserClick = openInBrowserClick,
+                        onShareClick = { htmlUri ->
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, htmlUri)
+                                type = "text/plain"
+                            }
+                            context.startActivity(Intent.createChooser(sendIntent, null))
+                        }
+                    )
                 }
-                context.startActivity(Intent.createChooser(sendIntent, null))
             }
-        )
+            is Resource.Error -> {
+                val message = repositoryDetailsResource.message
+                if (message != null) {
+                    ErrorMessageText(message = message)
+                }
+            }
+            is Resource.Loading -> {
+                ProgressIndicator()
+            }
+        }
     }
 }
