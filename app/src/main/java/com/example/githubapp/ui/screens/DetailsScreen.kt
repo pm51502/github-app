@@ -34,12 +34,6 @@ fun DetailsScreen(
             )
         )
     }
-    detailsViewModel.getRepoDetails(
-        repoData = RepoData(
-            repoOwner = repoOwner,
-            repoName = repoName
-        )
-    )
     val repositoryDetailsResource = detailsViewModel.repoDetailsStateFlow.collectAsState().value
 
     val uriHandler = LocalUriHandler.current

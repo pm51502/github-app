@@ -11,9 +11,10 @@ val viewModelModule = module {
             gitHubRepository = get()
         )
     }
-    viewModel {
+    viewModel { params ->
         DetailsViewModel(
-            gitHubRepository = get()
+            gitHubRepository = get(),
+            repoData = params.get()
         )
     }
 }
