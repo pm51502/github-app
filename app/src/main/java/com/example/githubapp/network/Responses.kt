@@ -37,33 +37,32 @@ data class RepositoryOwner(
     val avatarUrl: String? = "",
     @SerialName("html_url")
     val htmlUrl: String = "",
-    //val avatarId: Int = R.drawable.ic_github,
 )
 
 @Serializable
 data class RepositoryDetailsResponse(
     @SerialName("id")
-    val id: Int,
+    val id: Int = 0,
     @SerialName("name")
-    val name: String,
+    val name: String = "",
     @SerialName("description")
-    val description: String?,
+    val description: String? = "",
     @SerialName("owner")
-    val owner: RepositoryOwner,
+    val owner: RepositoryOwner = RepositoryOwner(),
     @SerialName("watchers_count")
-    val watchersCount: Int,
+    val watchersCount: Int = 0,
     @SerialName("forks_count")
-    val forksCount: Int,
+    val forksCount: Int = 0,
     @SerialName("open_issues")
-    val issuesCount: Int,
+    val issuesCount: Int = 0,
     @SerialName("stargazers_count")
-    val starsCount: Int,
+    val starsCount: Int = 0,
     @SerialName("created_at")
-    val createdAt: String,
+    val createdAt: String = "",
     @SerialName("updated_at")
-    val updatedAt: String,
+    val updatedAt: String = "",
     @SerialName("html_url")
-    val htmlUrl: String,
+    val htmlUrl: String = "",
 )
 
 data class RepositoryDetails(
@@ -74,8 +73,8 @@ data class RepositoryDetails(
     val watchersCount: Int = 0,
     val forksCount: Int = 0,
     val issuesCount: Int = 0,
-    val starsCount: Int = 0, //stargazers_count
-    val createdAt: String = "2011-09-15T09:53:18Z",
-    val updatedAt: String = "2011-09-15T09:53:18Z",
+    val starsCount: Int = 0,
+    val createdAt: String = "",
+    val updatedAt: String = "",
     val htmlUrl: String = "",
 )

@@ -29,25 +29,6 @@ fun RepositoryDetailsCard(
         elevation = dimensionResource(id = R.dimen.repository_details_card_elevation),
         modifier = modifier.fillMaxWidth()
     ) {
-        val repositoryStats = listOf(
-            RepositoryStat(
-                imageVector = Icons.Sharp.Visibility,
-                count = repositoryDetails.watchersCount
-            ),
-            RepositoryStat(
-                imageVector = Icons.Sharp.CallSplit,
-                count = repositoryDetails.forksCount
-            ),
-            RepositoryStat(
-                imageVector = Icons.Sharp.Adjust,
-                count = repositoryDetails.issuesCount
-            ),
-            RepositoryStat(
-                imageVector = Icons.Sharp.Star,
-                count = repositoryDetails.starsCount
-            ),
-        )
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.repository_details_card_spacing)),
@@ -66,7 +47,7 @@ fun RepositoryDetailsCard(
                 )
             }
 
-            RepositoryStatsRow(stats = repositoryStats)
+            RepositoryStatsRow(stats = repositoryDetails.getStats())
 
             Column {
                 Text(text = "Created: ${repositoryDetails.createdAt.formatTime()}")
@@ -95,3 +76,22 @@ fun RepositoryDetailsCard(
         }
     }
 }
+
+fun RepositoryDetails.getStats() : List<RepositoryStat> = listOf(
+    RepositoryStat(
+        imageVector = Icons.Sharp.Visibility,
+        count = this.watchersCount
+    ),
+    RepositoryStat(
+        imageVector = Icons.Sharp.CallSplit,
+        count = this.forksCount
+    ),
+    RepositoryStat(
+        imageVector = Icons.Sharp.Adjust,
+        count = this.issuesCount
+    ),
+    RepositoryStat(
+        imageVector = Icons.Sharp.Star,
+        count = this.starsCount
+    ),
+)

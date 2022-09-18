@@ -11,7 +11,7 @@
     <dimen name="filter_picker_height">38.dp</dimen>
     <dimen name="repository_list_spacing">10.dp</dimen>
     <dimen name="repository_stat_icon_size">18.dp</dimen>
-    <dimen name="repository_stats_spacing">8.dp</dimen>
+    <dimen name="repository_stats_spacing">6.dp</dimen>
     <dimen name="repository_stats_inner_spacing">2.dp</dimen>
     <dimen name="details_screen_padding">15.dp</dimen>
     <dimen name="repository_list_item_border_radius">4.dp</dimen>

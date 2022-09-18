@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.example.githubapp.R
 import com.example.githubapp.ui.theme.GithubGray
 
@@ -34,7 +35,11 @@ fun RepositoryStatsRow(
 
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.repository_stats_inner_spacing)))
 
-                Text(text = it.count.toString())
+                Text(
+                    text = it.count.toString(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }

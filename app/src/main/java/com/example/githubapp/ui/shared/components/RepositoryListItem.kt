@@ -47,31 +47,11 @@ fun RepositoryListItem(
         ) {
             Image(
                 painter = rememberAsyncImagePainter(model = repository.owner.avatarUrl),
-                //painterResource(id = repository.owner.avatarId),
                 contentDescription = stringResource(id = R.string.repository_owner_avatar),
                 modifier = Modifier
                     .padding(horizontal = dimensionResource(id = R.dimen.repository_list_item_avatar_padding))
                     .size(dimensionResource(id = R.dimen.repository_list_item_avatar_size))
                     .clickable { onAvatarClick.invoke(repository.owner.htmlUrl) }
-            )
-
-            val repositoryStats = listOf(
-                RepositoryStat(
-                    imageVector = Icons.Sharp.Visibility,
-                    count = repository.watchersCount
-                ),
-                RepositoryStat(
-                    imageVector = Icons.Sharp.CallSplit,
-                    count = repository.forksCount
-                ),
-                RepositoryStat(
-                    imageVector = Icons.Sharp.Adjust,
-                    count = repository.issuesCount
-                ),
-                RepositoryStat(
-                    imageVector = Icons.Sharp.Star,
-                    count = repository.starsCount
-                ),
             )
 
             Column(
@@ -84,7 +64,7 @@ fun RepositoryListItem(
                 )
                 Text(text = repository.owner.name)
 
-                RepositoryStatsRow(stats = repositoryStats)
+                RepositoryStatsRow(stats = repository.getStats())
 
                 Text(text = "Updated: ${repository.updatedAt.formatTime()}")
             }
@@ -95,4 +75,23 @@ fun RepositoryListItem(
 data class RepositoryStat(
     val imageVector: ImageVector,
     val count: Int
+)
+
+fun Repository.getStats() : List<RepositoryStat> = listOf(
+    RepositoryStat(
+        imageVector = Icons.Sharp.Visibility,
+        count = this.watchersCount
+    ),
+    RepositoryStat(
+        imageVector = Icons.Sharp.CallSplit,
+        count = this.forksCount
+    ),
+    RepositoryStat(
+        imageVector = Icons.Sharp.Adjust,
+        count = this.issuesCount
+    ),
+    RepositoryStat(
+        imageVector = Icons.Sharp.Star,
+        count = this.starsCount
+    )
 )

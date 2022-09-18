@@ -37,7 +37,6 @@ fun RepositoryOwnerCard(
             if (repositoryOwner.avatarUrl != null && repositoryOwner.avatarUrl.isNotEmpty()) {
                 Image(
                     painter = rememberAsyncImagePainter(model = repositoryOwner.avatarUrl),
-                    //painterResource(id = repositoryOwner.avatarId),
                     contentDescription = stringResource(id = R.string.repository_owner_avatar),
                     modifier = Modifier.size(85.dp)
                 )
