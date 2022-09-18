@@ -35,4 +35,5 @@
     <dimen name="repository_details_card_vertical_padding">20.dp</dimen>
     <dimen name="repository_details_card_spacing">15.dp</dimen>
     <dimen name="repository_details_card_desc_padding">50.dp</dimen>
+    <dimen name="cirular_progress_indicator_width">5.dp</dimen>
 </resources>
