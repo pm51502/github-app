@@ -1,6 +1,6 @@
 package com.example.githubapp.ui.shared.components
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +17,10 @@ fun RepositoryList(
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.repository_list_spacing))
+        contentPadding = PaddingValues(
+            horizontal = dimensionResource(id = R.dimen.repository_list_horizontal_padding),
+            vertical = dimensionResource(id = R.dimen.repository_list_vertical_padding)
+        )
     ) {
         items(count = repositoryList.size) { index ->
             RepositoryListItem(

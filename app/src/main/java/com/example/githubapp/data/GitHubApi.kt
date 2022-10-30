@@ -17,7 +17,7 @@ class GitHubApiImpl(
     override suspend fun getSearchedRepositories(searchQuery: String): Resource<RepositoriesResponse> {
         return try {
             val repositoriesResponse =
-                httpClient.get<RepositoriesResponse>(urlString = "${ApiConstants.SEARCH_URL}?q=$searchQuery")
+                httpClient.get<RepositoriesResponse>(urlString = "${ApiConstants.SEARCH_URL}?q=$searchQuery")  //&page=1&per_page=10
             Resource.Success(data = repositoriesResponse)
         } catch (e: Exception) {
             Resource.Error(errorMessage = e.message.toString())

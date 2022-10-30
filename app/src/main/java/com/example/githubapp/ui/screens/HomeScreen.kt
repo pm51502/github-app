@@ -1,9 +1,6 @@
 package com.example.githubapp.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -29,19 +26,22 @@ fun HomeScreen(
     val searchedReposResource = homeViewModel.searchedReposStateFlow.collectAsState().value
 
     var showSearchBar by remember { mutableStateOf(true) }
-    var showFilterPicker by remember { mutableStateOf(true) }
+    var showSortFieldPicker by remember { mutableStateOf(true) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var selectedSortField: SortField? by rememberSaveable { mutableStateOf(null) }
     val uriHandler = LocalUriHandler.current
 
     Column(
-        modifier = Modifier.padding(dimensionResource(id = R.dimen.home_screen_padding)),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.home_screen_vertical_padding)))
         ScreenDashboard(
             screenTitle = stringResource(id = R.string.home),
             onSearchIconClick = { showSearchBar = showSearchBar.not() },
-            onFilterIconClick = { showFilterPicker = showFilterPicker.not() }
+            onFilterIconClick = { showSortFieldPicker = showSortFieldPicker.not() },
+            modifier = Modifier.padding(
+                horizontal = dimensionResource(id = R.dimen.home_screen_horizontal_padding)
+            )
         )
 
         if (showSearchBar) {
@@ -50,19 +50,26 @@ fun HomeScreen(
                 onQueryChange = { searchQuery = it },
                 onSearchDone = {
                     homeViewModel.searchRepositories(searchQuery = searchQuery)
-                }
+                },
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(id = R.dimen.home_screen_horizontal_padding)
+                )
             )
         }
 
         val filterList = SortField.values().toList()
-        if (showFilterPicker) {
+        if (showSortFieldPicker) {
             SortFieldPicker(
                 options = filterList,
                 onOptionSelect = {
                     selectedSortField = if (selectedSortField == it) null else it
                 },
                 selectedOption = selectedSortField,
-                modifier = Modifier.height(dimensionResource(id = R.dimen.filter_picker_height))
+                modifier = Modifier
+                    .height(dimensionResource(id = R.dimen.filter_picker_height))
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.home_screen_horizontal_padding)
+                    )
             )
         }
 
