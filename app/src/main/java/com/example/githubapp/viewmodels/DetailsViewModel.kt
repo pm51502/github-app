@@ -7,15 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubapp.data.DetailsScreenState
 import com.example.githubapp.data.RepoData
-import com.example.githubapp.data.HomeScreenState
-import com.example.githubapp.network.RepositoryDetails
-import com.example.githubapp.network.RepositoryDetailsResponse
-import com.example.githubapp.network.Resource
 import com.example.githubapp.paging.DefaultPaginator
 import com.example.githubapp.repository.GitHubRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(
@@ -24,23 +17,17 @@ class DetailsViewModel(
 ) : ViewModel() {
     var detailsScreenState by mutableStateOf(DetailsScreenState())
 
-//    private val _repoDetailsStateFlow = MutableStateFlow<Resource<RepositoryDetailsResponse>>(
-//        Resource.Success(data = RepositoryDetailsResponse())
-//    )
-//    val repoDetailsStateFlow = _repoDetailsStateFlow.asStateFlow()
-
     private val paginator = DefaultPaginator(
         initialKey = detailsScreenState.page,
         onLoadUpdated = {
             detailsScreenState = detailsScreenState.copy(isLoadingItems = it)
         },
         onRequest = { nextPage ->
-            gitHubRepository.getUserRepositories(repoOwner = repoData.repoOwner)
-//            gitHubRepository.getSearchedRepositories(
-//                searchQuery = "",
-//                page = nextPage,
-//                pageSize = HomeViewModel.PAGE_SIZE
-//            )
+            gitHubRepository.getUserRepositories(
+                repoOwner = repoData.repoOwner,
+                page = nextPage,
+                pageSize = PAGE_SIZE
+            )
         },
         getNextKey = {
             detailsScreenState.page + 1
@@ -81,11 +68,6 @@ class DetailsViewModel(
                     )
                 }
             )
-
-//            _repoDetailsStateFlow.value = Resource.Loading()
-//
-//            _repoDetailsStateFlow.value =
-//                gitHubRepository.getRepositoryDetails(repoData = repoData).first()
         }
     }
 
@@ -93,5 +75,9 @@ class DetailsViewModel(
         viewModelScope.launch {
             paginator.loadNextItems()
         }
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 10
     }
 }

@@ -1,6 +1,5 @@
 package com.example.githubapp.data
 
-import android.util.Log
 import com.example.githubapp.network.RepositoriesResponse
 import com.example.githubapp.network.Repository
 import com.example.githubapp.network.RepositoryDetails
@@ -10,14 +9,13 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 interface GitHubApi {
     suspend fun getSearchedRepositories(searchQuery: String, page: Int, pageSize: Int): Result<List<Repository>>
-    suspend fun getRepositoryDetails(repoData: RepoData): Result<RepositoryDetails> //Resource<RepositoryDetailsResponse>
-    suspend fun getUserRepositories(repoOwner: String): Result<List<Repository>>
+    suspend fun getRepositoryDetails(repoData: RepoData): Result<RepositoryDetails>
+    suspend fun getUserRepositories(repoOwner: String, page: Int, pageSize: Int): Result<List<Repository>>
 }
 
 class GitHubApiImpl(
@@ -26,11 +24,9 @@ class GitHubApiImpl(
     override suspend fun getSearchedRepositories(searchQuery: String, page: Int, pageSize: Int): Result<List<Repository>> {
         return try {
             val repositoriesResponse =
-                httpClient.get<RepositoriesResponse>(urlString = "${ApiConstants.SEARCH_URL}?q=$searchQuery&page=$page&per_page=$pageSize")  //&page=1&per_page=10
-            Log.i("---API CALL SUCCESS---", "${ApiConstants.SEARCH_URL}?q=$searchQuery&page=$page&per_page=$pageSize")
+                httpClient.get<RepositoriesResponse>(urlString = "${ApiConstants.SEARCH_URL}?q=$searchQuery&page=$page&per_page=$pageSize")
             Result.success(repositoriesResponse.repositoryList)
         } catch (e: Exception) {
-            Log.i("---API CALL ERROR---", "${ApiConstants.SEARCH_URL}?q=$searchQuery&page=$page&per_page=$pageSize\n$e")
             Result.failure(e)
         }
     }
@@ -39,13 +35,9 @@ class GitHubApiImpl(
         return try {
             val repositoryDetailsResponse =
                 httpClient.get<RepositoryDetailsResponse>(urlString = "${ApiConstants.DETAILS_URL}/${repoData.repoOwner}/${repoData.repoName}")
-            Log.i("---API CALL SUCCESS---", "${ApiConstants.DETAILS_URL}/${repoData.repoOwner}/${repoData.repoName}")
             Result.success(repositoryDetailsResponse.toRepositoryDetails())
-            //Resource.Success(data = repositoryDetailsResponse)
         } catch (e: Exception) {
-            Log.i("---API CALL ERROR---", "${ApiConstants.DETAILS_URL}/${repoData.repoOwner}/${repoData.repoName}")
             Result.failure(e)
-            //Resource.Error(errorMessage = e.message.toString())
         }
     }
 
@@ -53,21 +45,14 @@ class GitHubApiImpl(
         ignoreUnknownKeys = true
     }
 
-    override suspend fun getUserRepositories(repoOwner: String): Result<List<Repository>> {
+    override suspend fun getUserRepositories(repoOwner: String, page: Int, pageSize: Int): Result<List<Repository>> {
         return try {
-            val response: HttpResponse = httpClient.get(urlString = "${ApiConstants.USER_REPOS_URL}/$repoOwner/repos")
+            val response: HttpResponse = httpClient.get(urlString = "${ApiConstants.USER_REPOS_URL}/$repoOwner/repos?page=$page&per_page=$pageSize")
             val responseStr: String = response.receive()
-            Log.i("---RAW HTTP RESPONSE---", responseStr)
-
             val userRepositories = json.decodeFromString<List<Repository>>(responseStr)
 
-//            val userRepositoriesResponse =
-//                httpClient.get<UserRepositoriesResponse>(urlString = "${ApiConstants.USER_REPOS_URL}/$repoOwner/repos")
-            Log.i("---API CALL SUCCESS---", "${ApiConstants.USER_REPOS_URL}/$repoOwner/repos")
             Result.success(userRepositories)
         } catch (e: Exception) {
-            Log.i("---API CALL ERROR---", "${ApiConstants.USER_REPOS_URL}/$repoOwner/repos\n$e")
-
             Result.failure(e)
         }
     }
