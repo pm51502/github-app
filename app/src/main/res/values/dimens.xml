@@ -40,4 +40,13 @@
     <dimen name="home_screen_vertical_padding">15.dp</dimen>
     <dimen name="home_screen_horizontal_padding">10.dp</dimen>
     <dimen name="repository_stats_row_end_padding">5.dp</dimen>
+    <dimen name="user_repository_card_border_radius">4.dp</dimen>
+    <dimen name="user_repository_card_elevation">4.dp</dimen>
+    <dimen name="user_repository_card_vertical_spacing">20.dp</dimen>
+    <dimen name="user_repository_card_vertical_padding">25.dp</dimen>
+    <dimen name="user_repository_card_horizontal_padding">10.dp</dimen>
+    <dimen name="user_repository_card_icon_size">45.dp</dimen>
+    <dimen name="user_repository_list_spacing">10.dp</dimen>
+    <dimen name="user_repository_card_width">150.dp</dimen>
+    <dimen name="user_repository_card_height">160.dp</dimen>
 </resources>

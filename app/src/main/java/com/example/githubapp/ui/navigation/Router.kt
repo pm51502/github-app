@@ -38,6 +38,7 @@ fun AppNavHost(
             )
         ) { backStackEntry ->
             DetailsScreen(
+                navController = navController,
                 repoOwner = backStackEntry.arguments?.getString(RouterConstants.REPO_OWNER),
                 repoName = backStackEntry.arguments?.getString(RouterConstants.REPO_NAME)
             )
