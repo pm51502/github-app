@@ -8,6 +8,8 @@ import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 
 val httpClient: HttpClient = HttpClient(Android) {
+    expectSuccess = true
+
     install(Logging) {
         logger = object : Logger {
             override fun log(message: String) {
