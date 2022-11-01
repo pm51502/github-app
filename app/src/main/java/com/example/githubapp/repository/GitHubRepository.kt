@@ -2,18 +2,15 @@ package com.example.githubapp.repository
 
 import com.example.githubapp.data.GitHubApi
 import com.example.githubapp.data.RepoData
-import com.example.githubapp.network.*
-import com.example.githubapp.utils.toRepositoryDetails
+import com.example.githubapp.network.Repository
+import com.example.githubapp.network.RepositoryDetails
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.shareIn
 
 interface GitHubRepository {
-    fun getSearchedRepositories(searchQuery: String): Flow<Resource<RepositoriesResponse>>
-    fun getRepositoryDetails(repoData: RepoData): Flow<Resource<RepositoryDetailsResponse>>
+    suspend fun getSearchedRepositories(searchQuery: String, page: Int, pageSize: Int): Result<List<Repository>>
+    suspend fun getRepositoryDetails(repoData: RepoData): Result<RepositoryDetails> //Flow<Resource<RepositoryDetailsResponse>>
+    suspend fun getUserRepositories(repoOwner: String?): Result<List<Repository>>
 }
 
 class GitHubRepositoryImpl(
@@ -21,19 +18,22 @@ class GitHubRepositoryImpl(
 ) : GitHubRepository {
     private val sharingScope = CoroutineScope(Dispatchers.Default)
 
-    override fun getSearchedRepositories(searchQuery: String): Flow<Resource<RepositoriesResponse>> = flow {
-        emit(gitHubApi.getSearchedRepositories(searchQuery = searchQuery))
-    }.shareIn(
-        sharingScope,
-        SharingStarted.Lazily,
-        replay = 1
-    )
+    override suspend fun getSearchedRepositories(searchQuery: String, page: Int, pageSize: Int): Result<List<Repository>> =
+        if (searchQuery.isEmpty()) Result.success(emptyList()) //Resource.Success(data = emptyList())
+        else gitHubApi.getSearchedRepositories(searchQuery = searchQuery, page = page, pageSize = pageSize)
 
-    override fun getRepositoryDetails(repoData: RepoData): Flow<Resource<RepositoryDetailsResponse>> = flow {
-        emit(gitHubApi.getRepositoryDetails(repoData = repoData))
-    }.shareIn(
-        sharingScope,
-        SharingStarted.Eagerly,
-        replay = 1
-    )
+    override suspend fun getRepositoryDetails(repoData: RepoData): Result<RepositoryDetails> =
+        gitHubApi.getRepositoryDetails(repoData = repoData)
+
+    override suspend fun getUserRepositories(repoOwner: String?): Result<List<Repository>> =
+        if (repoOwner == null) Result.success(emptyList())
+        else gitHubApi.getUserRepositories(repoOwner = repoOwner)
+
+//    override fun getRepositoryDetails(repoData: RepoData): Flow<Resource<RepositoryDetailsResponse>> = flow {
+//        emit(gitHubApi.getRepositoryDetails(repoData = repoData))
+//    }.shareIn(
+//        sharingScope,
+//        SharingStarted.Eagerly,
+//        replay = 1
+//    )
 }

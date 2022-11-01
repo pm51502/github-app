@@ -10,11 +10,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.githubapp.R
-import com.example.githubapp.network.Resource
 import com.example.githubapp.ui.navigation.AppScreen
 import com.example.githubapp.ui.navigation.navigateToScreen
 import com.example.githubapp.ui.shared.components.*
 import com.example.githubapp.viewmodels.HomeViewModel
+import io.ktor.client.features.*
 import org.koin.androidx.compose.viewModel
 import java.time.ZonedDateTime
 
@@ -23,7 +23,6 @@ fun HomeScreen(
     navController: NavController
 ) {
     val homeViewModel by viewModel<HomeViewModel>()
-    val searchedReposResource = homeViewModel.searchedReposStateFlow.collectAsState().value
 
     var showSearchBar by remember { mutableStateOf(true) }
     var showSortFieldPicker by remember { mutableStateOf(true) }
@@ -73,40 +72,39 @@ fun HomeScreen(
             )
         }
 
-        when (searchedReposResource) {
-            is Resource.Success -> {
-                val repositoryList = searchedReposResource.data?.repositoryList
-                val filteredRepositoryList = when (selectedSortField) {
-                    SortField.STARS -> repositoryList?.sortedByDescending { it.starsCount }
-                    SortField.FORKS -> repositoryList?.sortedByDescending { it.forksCount }
-                    SortField.UPDATED -> repositoryList?.sortedByDescending { ZonedDateTime.parse(it.updatedAt) }
-                    null -> repositoryList
-                }
+        val repositoryList = homeViewModel.homeScreenState.items
+        val filteredRepositoryList = when (selectedSortField) {
+            SortField.STARS -> repositoryList.sortedByDescending { it.starsCount }
+            SortField.FORKS -> repositoryList.sortedByDescending { it.forksCount }
+            SortField.UPDATED -> repositoryList.sortedByDescending { ZonedDateTime.parse(it.updatedAt) }
+            null -> repositoryList
+        }
 
-                if (filteredRepositoryList != null) {
-                    RepositoryList(
-                        repositoryList = filteredRepositoryList,
-                        onItemClick = { repoOwner, repoName ->
-                            navigateToScreen(
-                                navController = navController,
-                                route = "${AppScreen.Details.route}/$repoOwner/$repoName"
-                            )
-                        },
-                        onAvatarClick = { htmlUrl ->
-                            uriHandler.openUri(htmlUrl)
-                        }
+        val error = homeViewModel.homeScreenState.error
+        if (error != null && error !is ClientRequestException) {
+            RetryButton(
+                onClick = {
+                    homeViewModel.homeScreenState = homeViewModel.homeScreenState.copy(error = null)
+                    homeViewModel.loadNextItems()
+                }
+            )
+        } else {
+            RepositoryList(
+                repositoryList = filteredRepositoryList,
+                onItemClick = { repoOwner, repoName ->
+                    navigateToScreen(
+                        navController = navController,
+                        route = "${AppScreen.Details.route}/$repoOwner/$repoName"
                     )
-                }
-            }
-            is Resource.Error -> {
-                val message = searchedReposResource.message
-                if (message != null) {
-                    ErrorMessageText(message = message)
-                }
-            }
-            is Resource.Loading -> {
-                ProgressIndicator()
-            }
+                },
+                onAvatarClick = { htmlUrl ->
+                    uriHandler.openUri(htmlUrl)
+                },
+                loadNextItems = {
+                    homeViewModel.loadNextItems()
+                },
+                screenState = homeViewModel.homeScreenState
+            )
         }
     }
 }
