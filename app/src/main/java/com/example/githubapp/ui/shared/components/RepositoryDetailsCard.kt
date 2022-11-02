@@ -37,7 +37,9 @@ fun RepositoryDetailsCard(
             Text(
                 text = repositoryDetails.name,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.h1
+                style = MaterialTheme.typography.h1,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.repository_details_card_repo_name_horizontal_padding))
             )
             if (repositoryDetails.description != null) {
                 Text(

@@ -49,4 +49,7 @@
     <dimen name="user_repository_list_spacing">10.dp</dimen>
     <dimen name="user_repository_card_width">150.dp</dimen>
     <dimen name="user_repository_card_height">160.dp</dimen>
+    <dimen name="user_repository_list_progress_indicator_horizontal_padding">25.dp</dimen>
+    <dimen name="user_repository_list_progress_indicator_vertical_padding">50.dp</dimen>
+    <dimen name="repository_details_card_repo_name_horizontal_padding">20.dp</dimen>
 </resources>

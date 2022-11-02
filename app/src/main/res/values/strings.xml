@@ -18,4 +18,5 @@
     <string name="retry_button_text">Retry</string>
     <string name="ui_error_message">Oops! Something went wrong.</string>
     <string name="more_from_user">More from user</string>
+    <string name="expand_icon">Expand icon</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.githubapp.ui.shared.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,7 +35,12 @@ fun UserRepositoryList(
         }
         item {
             if (screenState.isLoadingItems) {
-                ProgressIndicator()
+                ProgressIndicator(
+                    modifier = Modifier.padding(
+                        horizontal = dimensionResource(id = R.dimen.user_repository_list_progress_indicator_horizontal_padding),
+                        vertical = dimensionResource(id = R.dimen.user_repository_list_progress_indicator_vertical_padding)
+                    )
+                )
             }
         }
     }
