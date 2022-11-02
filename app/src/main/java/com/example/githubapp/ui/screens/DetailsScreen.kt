@@ -4,7 +4,11 @@ import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.Composable
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.ExpandMore
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,6 +21,7 @@ import com.example.githubapp.data.RepoData
 import com.example.githubapp.ui.navigation.AppScreen
 import com.example.githubapp.ui.navigation.navigateToScreen
 import com.example.githubapp.ui.shared.components.*
+import com.example.githubapp.ui.theme.GithubGray
 import com.example.githubapp.viewmodels.DetailsViewModel
 import io.ktor.client.features.*
 import org.koin.androidx.compose.viewModel
@@ -31,6 +36,7 @@ fun DetailsScreen(
     val repoData = RepoData(repoOwner = repoOwner, repoName = repoName)
     val detailsViewModel by viewModel<DetailsViewModel> { parametersOf(repoData) }
 
+    var showUserRepos by remember { mutableStateOf(true) }
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
@@ -95,37 +101,50 @@ fun DetailsScreen(
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small_spacing)))
-        ScreenSectionTitle(
-            title = "More from $repoOwner",
-            modifier = Modifier.fillMaxWidth()
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ScreenSectionTitle(title = "More from $repoOwner")
+
+            IconButton(onClick = { showUserRepos = showUserRepos.not() }) {
+                Icon(
+                    imageVector = Icons.Sharp.ExpandMore,
+                    contentDescription = stringResource(id = R.string.expand_icon),
+                    tint = GithubGray
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small_spacing)))
 
-        val itemsError = detailsViewModel.detailsScreenState.itemsError
-        if (itemsError != null && itemsError !is ClientRequestException) {
-            RetryButton(
-                onClick = {
-                    detailsViewModel.detailsScreenState =
-                        detailsViewModel.detailsScreenState.copy(itemsError = null)
-                    detailsViewModel.loadNextItems()
-                }
-            )
-        } else {
-            val userRepositoryList =
-                detailsViewModel.detailsScreenState.items.filter { it.name != repoName }
+        if (showUserRepos) {
+            val itemsError = detailsViewModel.detailsScreenState.itemsError
+            if (itemsError != null && itemsError !is ClientRequestException) {
+                RetryButton(
+                    onClick = {
+                        detailsViewModel.detailsScreenState =
+                            detailsViewModel.detailsScreenState.copy(itemsError = null)
+                        detailsViewModel.loadNextItems()
+                    }
+                )
+            } else {
+                val userRepositoryList =
+                    detailsViewModel.detailsScreenState.items.filter { it.name != repoName }
 
-            UserRepositoryList(
-                userRepositoryList = userRepositoryList,
-                onItemClick = { repoOwner, repoName ->
-                    navController.popBackStack()
-                    navigateToScreen(
-                        navController = navController,
-                        route = "${AppScreen.Details.route}/$repoOwner/$repoName"
-                    )
-                },
-                loadNextItems = { detailsViewModel.loadNextItems() },
-                screenState = detailsViewModel.detailsScreenState
-            )
+                UserRepositoryList(
+                    userRepositoryList = userRepositoryList,
+                    onItemClick = { repoOwner, repoName ->
+                        navController.popBackStack()
+                        navigateToScreen(
+                            navController = navController,
+                            route = "${AppScreen.Details.route}/$repoOwner/$repoName"
+                        )
+                    },
+                    loadNextItems = { detailsViewModel.loadNextItems() },
+                    screenState = detailsViewModel.detailsScreenState
+                )
+            }
         }
     }
 }
