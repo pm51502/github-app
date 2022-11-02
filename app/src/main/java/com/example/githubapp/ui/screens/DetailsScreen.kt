@@ -101,21 +101,10 @@ fun DetailsScreen(
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small_spacing)))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ScreenSectionTitle(title = "More from $repoOwner")
-
-            IconButton(onClick = { showUserRepos = showUserRepos.not() }) {
-                Icon(
-                    imageVector = Icons.Sharp.ExpandMore,
-                    contentDescription = stringResource(id = R.string.expand_icon),
-                    tint = GithubGray
-                )
-            }
-        }
+        UserReposDashboard(
+            repoOwner = repoOwner,
+            onExpandClick = { showUserRepos = showUserRepos.not() }
+        )
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small_spacing)))
 
         if (showUserRepos) {
